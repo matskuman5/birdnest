@@ -1,0 +1,11 @@
+{
+  "name": "birdnest",
+  "version": "1.0.0",
+  "description": "Reaktor pre-assignment 2023\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[DDeveloper Trainee pre-assignment 2023",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Matias Selin",
+  "license": "ISC"
+}
