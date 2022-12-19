@@ -7,6 +7,11 @@ const Drone = ({ drone }) => {
       <TableCell>{drone.serialNumber}</TableCell>
       <TableCell>{drone.positionX.toFixed()}</TableCell>
       <TableCell>{drone.positionY.toFixed()}</TableCell>
+      <TableCell>
+        {Math.sqrt(
+          (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
+        ).toFixed()}
+      </TableCell>
     </TableRow>
   );
 };

@@ -15,9 +15,10 @@ const DroneTable = ({ drones }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Serial number: </TableCell>
-              <TableCell>X position: </TableCell>
-              <TableCell>Y position: </TableCell>
+              <TableCell>Serial number:</TableCell>
+              <TableCell>X position:</TableCell>
+              <TableCell>Y position:</TableCell>
+              <TableCell>Distance to nest:</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
