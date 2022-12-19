@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Container } from '@mui/material';
 import axios from 'axios';
 import Drone from './components/Drone';
 
@@ -18,12 +19,14 @@ const App = () => {
   }
 
   return (
-    <div className="App">
-      <p>Hello!</p>
-      {data.drones.map((drone) => {
-        return <Drone drone={drone} key={drone.serialNumber}></Drone>;
-      })}
-    </div>
+    <Container>
+      <div className="App">
+        <p>Hello!</p>
+        {data.drones.map((drone) => {
+          return <Drone drone={drone} key={drone.serialNumber}></Drone>;
+        })}
+      </div>
+    </Container>
   );
 };
 
