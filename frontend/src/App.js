@@ -21,8 +21,11 @@ const App = () => {
     };
   }, []);
 
-  const calculate = () => {
-    return 1 + 1;
+  const getPilot = (serialNumber) => {
+    axios.get(`http://localhost:3001/pilots/${serialNumber}`).then((res) => {
+      console.log('hello');
+      console.log(res.data);
+    });
   };
 
   if (isLoading) {

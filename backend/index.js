@@ -48,13 +48,13 @@ app.get('/deviceInformation', (req, res) => {
   });
 });
 
-app.get('/pilots', (req, res) => {
+app.get('/pilots/:serialNumber', (req, res) => {
   axios
     .get(
       `https://assignments.reaktor.com/birdnest/pilots/${req.params.serialNumber}`
     )
     .then((pilots) => {
-      res.send(pilots);
+      res.send(pilots.data);
     });
 });
 
