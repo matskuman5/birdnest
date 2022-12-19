@@ -4,9 +4,10 @@ const convertxml = require('xml-js');
 
 const app = express();
 
-app.get('/', (req, res) => {
+app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
-    res.send(convertxml.xml2json(xml.data));
+    const data = JSON.parse(convertxml.xml2json(xml.data));
+    res.send(data.elements);
   });
 });
 
