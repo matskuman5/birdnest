@@ -62,7 +62,7 @@ const App = () => {
         violationTime: Date.now(),
       };
       if (
-        violators.find((p) => (p.serialNumber = serialNumber)) === undefined
+        violators.find((p) => p.serialNumber === serialNumber) === undefined
       ) {
         setViolators(violators.concat([pilot]));
       }
