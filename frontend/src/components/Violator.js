@@ -13,6 +13,7 @@ const Violator = ({ violator }) => {
       <TableCell>{violator.phoneNumber}</TableCell>
       <TableCell>{violator.serialNumber}</TableCell>
       <TableCell>{time.toString()}</TableCell>
+      <TableCell>{(violator.closestViolation / 1000).toFixed()} m</TableCell>
     </TableRow>
   );
 };

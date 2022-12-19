@@ -20,6 +20,7 @@ const ViolatorTable = ({ violators }) => {
               <TableCell>Phone number:</TableCell>
               <TableCell>Drone serial number:</TableCell>
               <TableCell>Last detected violation:</TableCell>
+              <TableCell>Closest distance to nest:</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
