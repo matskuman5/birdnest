@@ -65,6 +65,17 @@ const App = () => {
         violators.find((p) => p.serialNumber === serialNumber) === undefined
       ) {
         setViolators(violators.concat([pilot]));
+      } else {
+        setViolators(
+          violators.map((violator) => {
+            if (violator.serialNumber === pilot.serialNumber) {
+              return pilot;
+            }
+            return {
+              ...violator,
+            };
+          })
+        );
       }
     });
   };
@@ -86,4 +97,3 @@ const App = () => {
 };
 
 export default App;
-
