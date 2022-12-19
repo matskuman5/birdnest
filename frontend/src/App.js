@@ -3,13 +3,18 @@ import axios from 'axios';
 
 const App = () => {
   const [data, setData] = useState({});
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get('http://localhost:3001/drones').then((res) => {
       setData(res.data);
-      console.log(res.data);
+      setLoading(false);
     });
   }, []);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="App">
