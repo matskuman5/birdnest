@@ -22,9 +22,9 @@ app.get('/drones', (req, res) => {
           ipv4: d.elements[4].elements[0].text,
           ipv6: d.elements[5].elements[0].text,
           firmware: d.elements[6].elements[0].text,
-          positionY: d.elements[7].elements[0].text,
-          positionX: d.elements[8].elements[0].text,
-          altitude: d.elements[9].elements[0].text,
+          positionY: parseFloat(d.elements[7].elements[0].text),
+          positionX: parseFloat(d.elements[8].elements[0].text),
+          altitude: parseFloat(d.elements[9].elements[0].text),
         };
         return drone;
       }),
