@@ -5,8 +5,8 @@ const Drone = ({ drone }) => {
   return (
     <TableRow>
       <TableCell>{drone.serialNumber}</TableCell>
-      <TableCell>{drone.positionX}</TableCell>
-      <TableCell>{drone.positionY}</TableCell>
+      <TableCell>{drone.positionX.toFixed()}</TableCell>
+      <TableCell>{drone.positionY.toFixed()}</TableCell>
     </TableRow>
   );
 };
