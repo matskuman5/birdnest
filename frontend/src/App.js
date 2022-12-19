@@ -4,13 +4,15 @@ import axios from 'axios';
 import DroneTable from './components/DroneTable';
 
 const App = () => {
-  const [data, setData] = useState({});
+  const [drones, setDrones] = useState([]);
+  const [snapshotTimestamp, setSnapshotTimestamp] = useState('');
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const id = setInterval(() => {
       axios.get('http://localhost:3001/drones').then((res) => {
-        setData(res.data);
+        setDrones(res.data.drones);
+        setSnapshotTimestamp(res.data.snapshotTimestamp);
         setLoading(false);
       });
     }, 2000);
@@ -27,7 +29,8 @@ const App = () => {
     <Container>
       <div className="App">
         <p>Hello!</p>
-        <DroneTable drones={data.drones}></DroneTable>
+        <p>Data last retrieved: {snapshotTimestamp}</p>
+        <DroneTable drones={drones}></DroneTable>
       </div>
     </Container>
   );
