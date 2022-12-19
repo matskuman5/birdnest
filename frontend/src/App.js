@@ -35,6 +35,22 @@ const App = () => {
     });
   }, [drones]);
 
+  // remove violators after 10 minutes
+  useEffect(() => {
+    const id = setInterval(() => {
+      setViolators(
+        violators.filter((violator) => {
+          const currentTime = Date.now();
+          const violationTime = new Date(violator.violationTime);
+          return currentTime - violationTime < 1000 * 60 * 10;
+        })
+      );
+    }, 2000);
+    return () => {
+      clearInterval(id);
+    };
+  }, [violators]);
+
   const getPilot = (serialNumber) => {
     axios.get(`http://localhost:3001/pilots/${serialNumber}`).then((res) => {
       const pilot = {
@@ -43,6 +59,7 @@ const App = () => {
         phoneNumber: res.data.phoneNumber,
         email: res.data.email,
         serialNumber: serialNumber,
+        violationTime: Date.now(),
       };
       if (
         violators.find((p) => (p.serialNumber = serialNumber)) === undefined
