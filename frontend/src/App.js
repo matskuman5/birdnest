@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 import axios from 'axios';
 import DroneTable from './components/DroneTable';
+import ViolatorTable from './components/ViolatorTable';
 
 const App = () => {
   const [drones, setDrones] = useState([]);
@@ -61,15 +62,7 @@ const App = () => {
         <p>Hello!</p>
         <p>Data last retrieved: {snapshotTimestamp}</p>
         <DroneTable drones={drones}></DroneTable>
-        <h1>VIOLATORS:</h1>
-        {violators.map((violator) => {
-          return (
-            <p>
-              {violator.firstName} {violator.lastName}, drone:{' '}
-              {violator.serialNumber}
-            </p>
-          );
-        })}
+        <ViolatorTable violators={violators}></ViolatorTable>
       </div>
     </Container>
   );
