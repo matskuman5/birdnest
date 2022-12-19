@@ -25,12 +25,11 @@ const App = () => {
 
   useEffect(() => {
     drones.forEach((drone) => {
-      if (
-        Math.sqrt(
-          (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
-        ) < 100000
-      ) {
-        getPilot(drone.serialNumber);
+      const distance = Math.sqrt(
+        (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
+      );
+      if (distance < 100000) {
+        getPilot(drone.serialNumber, distance);
       }
     });
   }, [drones]);
@@ -51,7 +50,7 @@ const App = () => {
     };
   }, [violators]);
 
-  const getPilot = (serialNumber) => {
+  const getPilot = (serialNumber, distance) => {
     axios.get(`http://localhost:3001/pilots/${serialNumber}`).then((res) => {
       const pilot = {
         firstName: res.data.firstName,
@@ -60,12 +59,17 @@ const App = () => {
         email: res.data.email,
         serialNumber: serialNumber,
         violationTime: Date.now(),
+        closestViolation: distance,
       };
-      if (
-        violators.find((p) => p.serialNumber === serialNumber) === undefined
-      ) {
+      const oldViolator = violators.find(
+        (p) => p.serialNumber === serialNumber
+      );
+      if (oldViolator === undefined) {
         setViolators(violators.concat([pilot]));
       } else {
+        if (pilot.closestViolation > oldViolator.closestViolation) {
+          pilot.closestViolation = oldViolator.closestViolation;
+        }
         setViolators(
           violators.map((violator) => {
             if (violator.serialNumber === pilot.serialNumber) {
