@@ -15,15 +15,6 @@ const App = () => {
         setDrones(res.data.drones);
         setSnapshotTimestamp(res.data.snapshotTimestamp);
         setLoading(false);
-        res.data.drones.forEach((drone) => {
-          if (
-            Math.sqrt(
-              (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
-            ) < 100000
-          ) {
-            getPilot(drone.serialNumber);
-          }
-        });
       });
     }, 2000);
     return () => {
@@ -31,19 +22,32 @@ const App = () => {
     };
   }, []);
 
+  useEffect(() => {
+    drones.forEach((drone) => {
+      if (
+        Math.sqrt(
+          (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
+        ) < 100000
+      ) {
+        getPilot(drone.serialNumber);
+      }
+    });
+  }, [drones]);
+
   const getPilot = (serialNumber) => {
     axios.get(`http://localhost:3001/pilots/${serialNumber}`).then((res) => {
-      const pilot = res.data;
-      setViolators(
-        violators.concat([
-          {
-            firstName: pilot.firstName,
-            lastName: pilot.lastName,
-            phoneNumber: pilot.phoneNumber,
-            emaile: pilot.email,
-          },
-        ])
-      );
+      const pilot = {
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
+        phoneNumber: res.data.phoneNumber,
+        email: res.data.email,
+        serialNumber: serialNumber,
+      };
+      if (
+        violators.find((p) => (p.serialNumber = serialNumber)) === undefined
+      ) {
+        setViolators(violators.concat([pilot]));
+      }
     });
   };
 
@@ -61,7 +65,8 @@ const App = () => {
         {violators.map((violator) => {
           return (
             <p>
-              {violator.firstName} {violator.lastName}
+              {violator.firstName} {violator.lastName}, drone:{' '}
+              {violator.serialNumber}
             </p>
           );
         })}
