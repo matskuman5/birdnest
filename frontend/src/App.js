@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 import axios from 'axios';
-import Drone from './components/Drone';
+import DroneTable from './components/DroneTable';
 
 const App = () => {
   const [data, setData] = useState({});
@@ -22,9 +22,7 @@ const App = () => {
     <Container>
       <div className="App">
         <p>Hello!</p>
-        {data.drones.map((drone) => {
-          return <Drone drone={drone} key={drone.serialNumber}></Drone>;
-        })}
+        <DroneTable drones={data.drones}></DroneTable>
       </div>
     </Container>
   );
