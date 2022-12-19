@@ -21,6 +21,10 @@ const App = () => {
     };
   }, []);
 
+  const calculate = () => {
+    return 1 + 1;
+  };
+
   if (isLoading) {
     return <p>Loading...</p>;
   }

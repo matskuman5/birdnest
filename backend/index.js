@@ -50,7 +50,9 @@ app.get('/deviceInformation', (req, res) => {
 
 app.get('/pilots', (req, res) => {
   axios
-    .get(`assignments.reaktor.com/birdnest/pilots/${req.body.serialNumber}`)
+    .get(
+      `https://assignments.reaktor.com/birdnest/pilots/${req.params.serialNumber}`
+    )
     .then((pilots) => {
       res.send(pilots);
     });
