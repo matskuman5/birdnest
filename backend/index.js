@@ -10,7 +10,41 @@ app.use(cors());
 app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
-    res.send(data.elements);
+    const droneData = data.elements[0].elements[1];
+    const drones = {
+      snapshotTimestamp: droneData.attributes.snapshotTimestamp,
+      drones: droneData.elements.map((d) => {
+        const drone = {
+          serialNumber: d.elements[0].elements[0].text,
+          model: d.elements[1].elements[0].text,
+          manufacturer: d.elements[2].elements[0].text,
+          mac: d.elements[3].elements[0].text,
+          ipv4: d.elements[4].elements[0].text,
+          ipv6: d.elements[5].elements[0].text,
+          firmware: d.elements[6].elements[0].text,
+          positionY: d.elements[7].elements[0].text,
+          positionX: d.elements[8].elements[0].text,
+          altitude: d.elements[9].elements[0].text,
+        };
+        return drone;
+      }),
+    };
+    res.send(drones);
+  });
+});
+
+app.get('/deviceInformation', (req, res) => {
+  axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
+    const data = JSON.parse(convertxml.xml2json(xml.data));
+    const deviceData = data.elements[0].elements[0];
+    const device = {
+      deviceId: deviceData.attributes.deviceId,
+      listenRange: deviceData.elements[0].elements[0].text,
+      deviceStarted: deviceData.elements[1].elements[0].text,
+      uptimeSeconds: deviceData.elements[2].elements[0].text,
+      updateIntervalMs: deviceData.elements[3].elements[0].text,
+    };
+    res.send(device);
   });
 });
 
