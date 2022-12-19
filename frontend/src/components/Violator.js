@@ -2,6 +2,8 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
 const Violator = ({ violator }) => {
+  const time = new Date(violator.violationTime);
+
   return (
     <TableRow>
       <TableCell>
@@ -10,6 +12,7 @@ const Violator = ({ violator }) => {
       <TableCell>{violator.email}</TableCell>
       <TableCell>{violator.phoneNumber}</TableCell>
       <TableCell>{violator.serialNumber}</TableCell>
+      <TableCell>{time.toString()}</TableCell>
     </TableRow>
   );
 };

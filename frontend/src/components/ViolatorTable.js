@@ -19,6 +19,7 @@ const ViolatorTable = ({ violators }) => {
               <TableCell>Email:</TableCell>
               <TableCell>Phone number:</TableCell>
               <TableCell>Drone serial number:</TableCell>
+              <TableCell>Last detected violation:</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
