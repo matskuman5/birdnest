@@ -8,9 +8,12 @@ const Drone = ({ drone }) => {
       <TableCell>{drone.positionX.toFixed()}</TableCell>
       <TableCell>{drone.positionY.toFixed()}</TableCell>
       <TableCell>
-        {Math.sqrt(
-          (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
-        ).toFixed()}
+        {(
+          Math.sqrt(
+            (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
+          ) / 1000
+        ).toFixed()}{' '}
+        m
       </TableCell>
     </TableRow>
   );
