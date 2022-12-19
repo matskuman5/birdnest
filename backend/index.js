@@ -1,8 +1,11 @@
 const express = require('express');
 const axios = require('axios');
 const convertxml = require('xml-js');
+const cors = require('cors');
 
 const app = express();
+
+app.use(cors());
 
 app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
