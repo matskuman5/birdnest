@@ -11,6 +11,14 @@ app.get('/drones', (req, res) => {
   });
 });
 
+app.get('/pilots', (req, res) => {
+  axios
+    .get(`assignments.reaktor.com/birdnest/pilots/${req.body.serialNumber}`)
+    .then((pilots) => {
+      res.send(pilots);
+    });
+});
+
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
