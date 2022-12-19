@@ -8,10 +8,15 @@ const App = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/drones').then((res) => {
-      setData(res.data);
-      setLoading(false);
-    });
+    const id = setInterval(() => {
+      axios.get('http://localhost:3001/drones').then((res) => {
+        setData(res.data);
+        setLoading(false);
+      });
+    }, 2000);
+    return () => {
+      clearInterval(id);
+    };
   }, []);
 
   if (isLoading) {
