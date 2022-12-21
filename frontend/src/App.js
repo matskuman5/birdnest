@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     const id = setInterval(() => {
-      axios.get('http://localhost:3001/drones').then((res) => {
+      axios.get('/drones').then((res) => {
         setDrones(res.data.drones);
         setSnapshotTimestamp(res.data.snapshotTimestamp);
         setLoading(false);
@@ -51,7 +51,7 @@ const App = () => {
   }, [violators]);
 
   const getPilot = (serialNumber, distance) => {
-    axios.get(`http://localhost:3001/pilots/${serialNumber}`).then((res) => {
+    axios.get(`pilots/${serialNumber}`).then((res) => {
       const pilot = {
         firstName: res.data.firstName,
         lastName: res.data.lastName,
