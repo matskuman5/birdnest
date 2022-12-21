@@ -93,7 +93,7 @@ const App = () => {
   return (
     <Container>
       <div className="App">
-        <p>Hello!</p>
+        <p>Hello, welcome to the birdnest app!</p>
         <p>Data last retrieved: {snapshotTimestamp}</p>
         <DroneTable drones={drones}></DroneTable>
         <ViolatorTable violators={violators}></ViolatorTable>
