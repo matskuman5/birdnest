@@ -59,7 +59,7 @@ app.get('/pilots/:serialNumber', (req, res) => {
     });
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);
 });
