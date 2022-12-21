@@ -8,9 +8,6 @@ processes = []
 [build]
   builder = "heroku/buildpacks:20"
 
-[deploy]
-  release_command = "npm run build:ui"
-
 [env]
   PORT = "8080"
 
