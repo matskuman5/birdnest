@@ -6,6 +6,7 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors());
+app.use(express.static('build'));
 
 app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
