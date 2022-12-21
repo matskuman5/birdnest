@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
         with:
           node-version: '16'
+      - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: cd frontend && npm install && cd ..
-      - run: cd backend && npm run build:ui && pwd && cd .. && pwd
+      - run: cd backend && npm run build:ui && pwd && ls
       - run: flyctl deploy --remote-only
