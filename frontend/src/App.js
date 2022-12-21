@@ -32,9 +32,11 @@ const App = () => {
         getPilot(drone.serialNumber, distance);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [drones]);
 
   // remove violators after 10 minutes
+  // REWORK THIS USING SETTIMER!!!!!!!!!!!!!!
   useEffect(() => {
     const id = setInterval(() => {
       setViolators(
