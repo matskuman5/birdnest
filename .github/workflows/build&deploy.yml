@@ -19,5 +19,5 @@ jobs:
         with:
           node-version: '16'
       - run: cd frontend && npm install && cd ..
-      - run: cd backend && npm run build:ui
+      - run: cd backend && npm run build:ui && cd ../backend
       - run: flyctl deploy --remote-only
