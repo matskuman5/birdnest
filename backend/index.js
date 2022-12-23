@@ -5,11 +5,13 @@ const axios = require('axios');
 const convertxml = require('xml-js');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
 const app = express();
 
 app.use(cors());
 app.use(express.static('build'));
+const jsonParser = bodyParser.json();
 
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI);
@@ -92,6 +94,13 @@ app.get('/pilots/:serialNumber', (req, res) => {
 app.get('/violators', (req, res) => {
   Violator.find({}).then((violators) => {
     res.send(violators);
+  });
+});
+
+app.post('/violators/:serialNumber', jsonParser, (req, res) => {
+  const violator = new Violator(req.body);
+  violator.save().then((savedViolator) => {
+    res.json(savedViolator);
   });
 });
 
