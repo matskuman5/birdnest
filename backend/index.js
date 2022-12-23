@@ -22,6 +22,18 @@ const droneSchema = new mongoose.Schema({
 
 const Drone = mongoose.model('Drone', droneSchema);
 
+const violatorSchema = new mongoose.Schema({
+  firstName: String,
+  lastName: String,
+  phoneNumber: String,
+  email: String,
+  serialNumber: String,
+  violationTime: String,
+  closestViolation: Number,
+});
+
+const Violator = mongoose.model('Violator', violatorSchema);
+
 app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
@@ -75,6 +87,12 @@ app.get('/pilots/:serialNumber', (req, res) => {
     .then((pilots) => {
       res.send(pilots.data);
     });
+});
+
+app.get('/violators', (req, res) => {
+  Violator.find({}).then((violators) => {
+    res.send(violators);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
