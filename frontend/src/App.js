@@ -11,6 +11,10 @@ const App = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    axios.get('/violators').then((res) => {
+      setViolators(res.data);
+    });
+
     const id = setInterval(() => {
       axios.get('/drones').then((res) => {
         setDrones(res.data.drones);
