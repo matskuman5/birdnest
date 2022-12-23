@@ -104,6 +104,16 @@ app.post('/violators/:serialNumber', jsonParser, (req, res) => {
   });
 });
 
+app.delete('/violators/:serialNumber', (req, res) => {
+  Violator.deleteOne({ serialNumber: req.params.serialNumber }).then(
+    (deletion) => {
+      res.send(deletion);
+      console.log(deletion);
+      console.log(req.params.serialNumber);
+    }
+  );
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Backend server listening on port ${PORT}`);

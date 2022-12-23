@@ -43,12 +43,16 @@ const App = () => {
   // REWORK THIS USING SETTIMER!!!!!!!!!!!!!!
   useEffect(() => {
     const id = setInterval(() => {
+      const toDelete = violators.filter((violator) => {
+        const currentTime = Date.now();
+        const violationTime = new Date(violator.violationTime);
+        return currentTime - violationTime > 1000 * 4;
+      });
+      toDelete.forEach((violator) => {
+        axios.delete(`/violators/${violator.serialNumber}`);
+      });
       setViolators(
-        violators.filter((violator) => {
-          const currentTime = Date.now();
-          const violationTime = new Date(violator.violationTime);
-          return currentTime - violationTime < 1000 * 60 * 10;
-        })
+        violators.filter((violator) => !toDelete.includes(violator))
       );
     }, 2000);
     return () => {
@@ -72,6 +76,7 @@ const App = () => {
       );
       if (oldViolator === undefined) {
         setViolators(violators.concat([pilot]));
+        axios.post(`violators/${pilot.serialNumber}`, pilot);
       } else {
         if (pilot.closestViolation > oldViolator.closestViolation) {
           pilot.closestViolation = oldViolator.closestViolation;
