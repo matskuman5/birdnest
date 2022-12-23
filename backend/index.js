@@ -11,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.static('build'));
 
+mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI);
 
 const droneSchema = new mongoose.Schema({
