@@ -65,15 +65,8 @@ setInterval(() => {
     const drones = droneData.elements.map((d) => {
       const drone = {
         serialNumber: d.elements[0].elements[0].text,
-        model: d.elements[1].elements[0].text,
-        manufacturer: d.elements[2].elements[0].text,
-        mac: d.elements[3].elements[0].text,
-        ipv4: d.elements[4].elements[0].text,
-        ipv6: d.elements[5].elements[0].text,
-        firmware: d.elements[6].elements[0].text,
         positionY: parseFloat(d.elements[7].elements[0].text),
         positionX: parseFloat(d.elements[8].elements[0].text),
-        altitude: parseFloat(d.elements[9].elements[0].text),
       };
       return drone;
     });
