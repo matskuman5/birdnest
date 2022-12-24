@@ -26,27 +26,6 @@ const App = () => {
     };
   }, []);
 
-  // remove violators after 10 minutes
-  // REWORK THIS USING SETTIMER!!!!!!!!!!!!!!
-  useEffect(() => {
-    const id = setInterval(() => {
-      const toDelete = violators.filter((violator) => {
-        const currentTime = Date.now();
-        const violationTime = new Date(violator.violationTime);
-        return currentTime - violationTime > 1000 * 60 * 10;
-      });
-      toDelete.forEach((violator) => {
-        axios.delete(`/violators/${violator.serialNumber}`);
-      });
-      setViolators(
-        violators.filter((violator) => !toDelete.includes(violator))
-      );
-    }, 2000);
-    return () => {
-      clearInterval(id);
-    };
-  }, [violators]);
-
   if (isLoading) {
     return <p>Loading...</p>;
   }
