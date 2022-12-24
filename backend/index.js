@@ -16,14 +16,6 @@ const jsonParser = bodyParser.json();
 mongoose.set('strictQuery', false);
 mongoose.connect(process.env.MONGODB_URI);
 
-const droneSchema = new mongoose.Schema({
-  serialNumber: String,
-  positionX: Number,
-  positionY: Number,
-});
-
-const Drone = mongoose.model('Drone', droneSchema);
-
 const violatorSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
@@ -54,14 +46,6 @@ app.get('/drones', (req, res) => {
         altitude: parseFloat(d.elements[9].elements[0].text),
       };
       return drone;
-    });
-
-    Drone.find({}).then((dronesDB) => {
-      const final = {
-        snapshotTimestamp: droneData.attributes.snapshotTimestamp,
-        drones: dronesAPI.concat(dronesDB),
-      };
-      res.send(final);
     });
   });
 });
