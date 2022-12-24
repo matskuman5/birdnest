@@ -22,7 +22,7 @@ const violatorSchema = new mongoose.Schema({
   phoneNumber: String,
   email: String,
   serialNumber: String,
-  violationTime: String,
+  violationTime: Number,
   closestViolation: Number,
 });
 
