@@ -46,7 +46,7 @@ const App = () => {
       const toDelete = violators.filter((violator) => {
         const currentTime = Date.now();
         const violationTime = new Date(violator.violationTime);
-        return currentTime - violationTime > 1000 * 4;
+        return currentTime - violationTime > 1000 * 60 * 10;
       });
       toDelete.forEach((violator) => {
         axios.delete(`/violators/${violator.serialNumber}`);
@@ -91,6 +91,7 @@ const App = () => {
             };
           })
         );
+        axios.put(`violators/${pilot.serialNumber}`, pilot);
       }
     });
   };
