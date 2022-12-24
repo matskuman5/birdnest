@@ -104,6 +104,18 @@ app.post('/violators/:serialNumber', jsonParser, (req, res) => {
   });
 });
 
+app.put('/violators/:serialNumber', jsonParser, (req, res) => {
+  Violator.updateOne(
+    { serialNumber: req.params.serialNumber },
+    {
+      violationTime: req.body.violationTime,
+      closestViolation: req.body.closestViolation,
+    }
+  ).then((update) => {
+    res.send(update);
+  });
+});
+
 app.delete('/violators/:serialNumber', (req, res) => {
   Violator.deleteOne({ serialNumber: req.params.serialNumber }).then(
     (deletion) => {
