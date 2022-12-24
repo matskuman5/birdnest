@@ -30,6 +30,7 @@ const Violator = mongoose.model('Violator', violatorSchema);
 
 var violatorslocal = [];
 var droneslocal = [];
+var snapshotTimestamp = 0;
 
 const addViolator = (serialNumber, distance) => {
   console.log('busted!', serialNumber, distance);
@@ -100,10 +101,7 @@ setInterval(() => {
       };
       return drone;
     });
-    const final = {
-      snapshotTimestamp: droneData.attributes.snapshotTimestamp,
-      drones: drones,
-    };
+    snapshotTimestamp = droneData.attributes.snapshotTimestamp;
     droneslocal = drones;
     console.log('droneslocal:', droneslocal.length);
     droneslocal.forEach((drone) => {
@@ -118,29 +116,9 @@ setInterval(() => {
 }, 2000);
 
 app.get('/drones', (req, res) => {
-  axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
-    const data = JSON.parse(convertxml.xml2json(xml.data));
-    const droneData = data.elements[0].elements[1];
-    const drones = droneData.elements.map((d) => {
-      const drone = {
-        serialNumber: d.elements[0].elements[0].text,
-        model: d.elements[1].elements[0].text,
-        manufacturer: d.elements[2].elements[0].text,
-        mac: d.elements[3].elements[0].text,
-        ipv4: d.elements[4].elements[0].text,
-        ipv6: d.elements[5].elements[0].text,
-        firmware: d.elements[6].elements[0].text,
-        positionY: parseFloat(d.elements[7].elements[0].text),
-        positionX: parseFloat(d.elements[8].elements[0].text),
-        altitude: parseFloat(d.elements[9].elements[0].text),
-      };
-      return drone;
-    });
-    const final = {
-      snapshotTimestamp: droneData.attributes.snapshotTimestamp,
-      drones: drones,
-    };
-    res.send(final);
+  res.send({
+    drones: droneslocal,
+    snapshotTimestamp: snapshotTimestamp,
   });
 });
 
@@ -170,9 +148,7 @@ app.get('/pilots/:serialNumber', (req, res) => {
 });
 
 app.get('/violators', (req, res) => {
-  Violator.find({}).then((violators) => {
-    res.send(violators);
-  });
+  res.send(violatorslocal);
 });
 
 app.post('/violators/:serialNumber', jsonParser, (req, res) => {
