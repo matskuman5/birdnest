@@ -53,6 +53,12 @@ const addViolator = (serialNumber, distance) => {
 };
 
 setInterval(() => {
+  violatorslocal = violatorslocal.filter((violator) => {
+    const currentTime = Date.now();
+    const violationTime = new Date(violator.violationTime);
+    return currentTime - violationTime < 1000 * 60 * 10;
+  });
+
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
