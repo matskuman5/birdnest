@@ -33,7 +33,7 @@ const App = () => {
         (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
       );
       if (distance < 100000) {
-        getPilot(drone.serialNumber, distance);
+        addViolator(drone.serialNumber, distance);
       }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,7 +60,7 @@ const App = () => {
     };
   }, [violators]);
 
-  const getPilot = (serialNumber, distance) => {
+  const addViolator = (serialNumber, distance) => {
     axios.get(`pilots/${serialNumber}`).then((res) => {
       const pilot = {
         firstName: res.data.firstName,
