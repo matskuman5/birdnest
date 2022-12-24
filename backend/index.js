@@ -40,7 +40,7 @@ const addViolator = (serialNumber, distance) => {
         if (violator.closestViolation > oldViolator.closestViolation) {
           violator.closestViolation = oldViolator.closestViolation;
         }
-        violatorslocal.map((eviolator) => {
+        violatorslocal = violatorslocal.map((eviolator) => {
           if (eviolator.serialNumber === violator.serialNumber) {
             return violator;
           }
