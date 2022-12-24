@@ -4,7 +4,6 @@ const express = require('express');
 const axios = require('axios');
 const convertxml = require('xml-js');
 const cors = require('cors');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -12,21 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.static('build'));
 const jsonParser = bodyParser.json();
-
-mongoose.set('strictQuery', false);
-mongoose.connect(process.env.MONGODB_URI);
-
-const violatorSchema = new mongoose.Schema({
-  firstName: String,
-  lastName: String,
-  phoneNumber: String,
-  email: String,
-  serialNumber: String,
-  violationTime: Number,
-  closestViolation: Number,
-});
-
-const Violator = mongoose.model('Violator', violatorSchema);
 
 var violatorslocal = [];
 var droneslocal = [];
@@ -51,9 +35,6 @@ const addViolator = (serialNumber, distance) => {
       );
       if (oldViolator === undefined) {
         violatorslocal.push(violator);
-        //save violator data in mongodb
-        const violatordb = new Violator(violator);
-        violatordb.save();
       } else {
         console.log('updating violator');
         if (violator.closestViolation > oldViolator.closestViolation) {
@@ -67,22 +48,11 @@ const addViolator = (serialNumber, distance) => {
             ...eviolator,
           };
         });
-        Violator.updateOne(
-          { serialNumber: violator.serialNumber },
-          {
-            violationTime: violator.violationTime,
-            closestViolation: violator.closestViolation,
-          }
-        );
       }
     });
 };
 
 setInterval(() => {
-  Violator.find({}).then((violators) => {
-    violatorslocals = violators;
-    console.log('amount of violators: ', violatorslocal.length);
-  });
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
@@ -149,35 +119,6 @@ app.get('/pilots/:serialNumber', (req, res) => {
 
 app.get('/violators', (req, res) => {
   res.send(violatorslocal);
-});
-
-app.post('/violators/:serialNumber', jsonParser, (req, res) => {
-  const violator = new Violator(req.body);
-  violator.save().then((savedViolator) => {
-    res.json(savedViolator);
-  });
-});
-
-app.put('/violators/:serialNumber', jsonParser, (req, res) => {
-  Violator.updateOne(
-    { serialNumber: req.params.serialNumber },
-    {
-      violationTime: req.body.violationTime,
-      closestViolation: req.body.closestViolation,
-    }
-  ).then((update) => {
-    res.send(update);
-  });
-});
-
-app.delete('/violators/:serialNumber', (req, res) => {
-  Violator.deleteOne({ serialNumber: req.params.serialNumber }).then(
-    (deletion) => {
-      res.send(deletion);
-      console.log(deletion);
-      console.log(req.params.serialNumber);
-    }
-  );
 });
 
 const PORT = process.env.PORT || 3001;
