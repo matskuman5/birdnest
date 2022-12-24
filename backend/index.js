@@ -32,7 +32,7 @@ app.get('/drones', (req, res) => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
-    const dronesAPI = droneData.elements.map((d) => {
+    const drones = droneData.elements.map((d) => {
       const drone = {
         serialNumber: d.elements[0].elements[0].text,
         model: d.elements[1].elements[0].text,
@@ -47,6 +47,11 @@ app.get('/drones', (req, res) => {
       };
       return drone;
     });
+    const final = {
+      snapshotTimestamp: droneData.attributes.snapshotTimestamp,
+      drones: drones,
+    };
+    res.send(final);
   });
 });
 
