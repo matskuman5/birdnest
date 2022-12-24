@@ -11,33 +11,20 @@ const App = () => {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('/violators').then((res) => {
-      setViolators(res.data);
-    });
-
     const id = setInterval(() => {
       axios.get('/drones').then((res) => {
         setDrones(res.data.drones);
         setSnapshotTimestamp(res.data.snapshotTimestamp);
         setLoading(false);
       });
+      axios.get('/violators').then((res) => {
+        setViolators(res.data);
+      });
     }, 2000);
     return () => {
       clearInterval(id);
     };
   }, []);
-
-  useEffect(() => {
-    drones.forEach((drone) => {
-      const distance = Math.sqrt(
-        (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
-      );
-      if (distance < 100000) {
-        addViolator(drone.serialNumber, distance);
-      }
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [drones]);
 
   // remove violators after 10 minutes
   // REWORK THIS USING SETTIMER!!!!!!!!!!!!!!
@@ -59,42 +46,6 @@ const App = () => {
       clearInterval(id);
     };
   }, [violators]);
-
-  const addViolator = (serialNumber, distance) => {
-    axios.get(`pilots/${serialNumber}`).then((res) => {
-      const pilot = {
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        phoneNumber: res.data.phoneNumber,
-        email: res.data.email,
-        serialNumber: serialNumber,
-        violationTime: Date.now(),
-        closestViolation: distance,
-      };
-      const oldViolator = violators.find(
-        (p) => p.serialNumber === serialNumber
-      );
-      if (oldViolator === undefined) {
-        setViolators(violators.concat([pilot]));
-        axios.post(`violators/${pilot.serialNumber}`, pilot);
-      } else {
-        if (pilot.closestViolation > oldViolator.closestViolation) {
-          pilot.closestViolation = oldViolator.closestViolation;
-        }
-        setViolators(
-          violators.map((violator) => {
-            if (violator.serialNumber === pilot.serialNumber) {
-              return pilot;
-            }
-            return {
-              ...violator,
-            };
-          })
-        );
-        axios.put(`violators/${pilot.serialNumber}`, pilot);
-      }
-    });
-  };
 
   if (isLoading) {
     return <p>Loading...</p>;
