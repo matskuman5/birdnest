@@ -12,14 +12,12 @@ const App = () => {
 
   useEffect(() => {
     const id = setInterval(() => {
-      axios.get('/drones').then((res) => {
+      axios.get('/data').then((res) => {
         setDrones(res.data.drones);
+        setViolators(res.data.violators);
         const time = new Date(res.data.snapshotTimestamp);
         setSnapshotTimestamp(time.toString());
         setLoading(false);
-      });
-      axios.get('/violators').then((res) => {
-        setViolators(res.data);
       });
     }, 2000);
     return () => {
