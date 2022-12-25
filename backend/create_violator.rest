@@ -1,8 +1,0 @@
-post http://localhost:3001/violators/testid
-Content-Type: application/json
-
-{
-    "firstName": "test",
-    "lastName": "test",
-    "serialNumber": "testid"
-}
