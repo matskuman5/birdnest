@@ -19,10 +19,7 @@ const addViolator = (serialNumber, distance) => {
     .get(`https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`)
     .then((pilot) => {
       const violator = {
-        firstName: pilot.data.firstName,
-        lastName: pilot.data.lastName,
-        phoneNumber: pilot.data.phoneNumber,
-        email: pilot.data.email,
+        ...pilot.data,
         serialNumber: serialNumber,
         violationTime: Date.now(),
         closestViolation: distance,
