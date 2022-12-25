@@ -89,15 +89,12 @@ setInterval(() => {
   });
 }, 2000);
 
-app.get('/drones', (req, res) => {
+app.get('/data', (req, res) => {
   res.send({
     drones: drones,
+    violators: violators,
     snapshotTimestamp: snapshotTimestamp,
   });
-});
-
-app.get('/violators', (req, res) => {
-  res.send(violators);
 });
 
 const PORT = process.env.PORT || 3001;
