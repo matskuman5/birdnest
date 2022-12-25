@@ -14,7 +14,8 @@ const App = () => {
     const id = setInterval(() => {
       axios.get('/drones').then((res) => {
         setDrones(res.data.drones);
-        setSnapshotTimestamp(res.data.snapshotTimestamp);
+        const time = new Date(res.data.snapshotTimestamp);
+        setSnapshotTimestamp(time.toString());
         setLoading(false);
       });
       axios.get('/violators').then((res) => {
