@@ -16,7 +16,6 @@ var snapshotTimestamp = 0;
 
 // adds or updates a violator
 const addViolator = (serialNumber, distance) => {
-  console.log('busted!', serialNumber, distance);
   axios.get(`${apiUrl}/pilots/${serialNumber}`).then((pilot) => {
     const violator = {
       ...pilot.data,
@@ -26,11 +25,12 @@ const addViolator = (serialNumber, distance) => {
     };
     const oldViolator = violators.find((p) => p.serialNumber === serialNumber);
     if (oldViolator === undefined) {
+      console.log('busted! new violator:', serialNumber, distance);
       violators.push(violator);
     } else {
       // if the violator already exists, update his violation time
       // and closest violation, if necessary
-      console.log('updating violator');
+      console.log('updating violator:', serialNumber, distance);
       if (violator.closestViolation > oldViolator.closestViolation) {
         violator.closestViolation = oldViolator.closestViolation;
       }
@@ -52,7 +52,9 @@ setInterval(() => {
   violators = violators.filter((violator) => {
     const currentTime = Date.now();
     const violationTime = new Date(violator.violationTime);
-    return currentTime - violationTime < 1000 * 60 * 10;
+    const keep = currentTime - violationTime < 1000 * 60 * 10;
+    if (!keep) console.log('deleting old violation', violator.serialNumber);
+    return keep;
   });
 
   // get drone locations from API
@@ -69,7 +71,7 @@ setInterval(() => {
     });
     snapshotTimestamp = droneData.attributes.snapshotTimestamp;
     drones = dronesAPI;
-    console.log('droneslocal:', drones.length);
+    console.log('drones detected:', drones.length);
 
     // check for violators
     // violation = drone distance to nest at (250000, 250000) < 100 m
