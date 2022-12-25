@@ -71,7 +71,12 @@ setInterval(() => {
     });
     snapshotTimestamp = droneData.attributes.snapshotTimestamp;
     drones = dronesAPI;
-    console.log('drones detected:', drones.length);
+    console.log(
+      'drones detected:',
+      drones.length,
+      '| violators:',
+      violators.length
+    );
 
     // check for violators
     // violation = drone distance to nest at (250000, 250000) < 100 m
