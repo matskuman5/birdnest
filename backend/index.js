@@ -14,36 +14,72 @@ var violators = [];
 var drones = [];
 var snapshotTimestamp = 0;
 
-// adds or updates a violator
-const addViolator = (serialNumber, distance) => {
-  axios.get(`${apiUrl}/pilots/${serialNumber}`).then((pilot) => {
-    const violator = {
-      ...pilot.data,
-      serialNumber: serialNumber,
-      violationTime: Date.now(),
-      closestViolation: distance,
-    };
-    const oldViolator = violators.find((p) => p.serialNumber === serialNumber);
-    if (oldViolator === undefined) {
-      console.log('busted! new violator:', serialNumber, distance);
-      violators.push(violator);
-    } else {
-      // if the violator already exists, update his violation time
-      // and closest violation, if necessary
-      console.log('updating violator:', serialNumber, distance);
-      if (violator.closestViolation > oldViolator.closestViolation) {
-        violator.closestViolation = oldViolator.closestViolation;
-      }
-      violators = violators.map((existingViolator) => {
-        if (existingViolator.serialNumber === violator.serialNumber) {
-          return violator;
-        }
-        return {
-          ...existingViolator,
+// gets pilot data from API, then adds violation
+const getPilot = (serialNumber, distance) => {
+  axios
+    .get(`${apiUrl}/pilots/${serialNumber}`)
+    .then((pilot) => {
+      const violator = {
+        ...pilot.data,
+        serialNumber: serialNumber,
+        violationTime: Date.now(),
+        closestViolation: distance,
+      };
+      addViolator(violator);
+    })
+    .catch((error) => {
+      if (error.response && error.response.status === 404) {
+        console.log(
+          `ERROR: Pilot with serial number ${serialNumber} not found`
+        );
+        const violator = {
+          firstName: '*UNKNOWN*',
+          lastName: '*UNKNOWN*',
+          phoneNumber: '*UNKNOWN*',
+          email: '*UNKNOWN*',
+          serialNumber: serialNumber,
+          violationTime: Date.now(),
+          closestViolation: distance,
         };
-      });
+        addViolator(violator);
+      } else {
+        console.error(error);
+      }
+    });
+};
+
+// adds or updates a violator
+const addViolator = (violator) => {
+  const oldViolator = violators.find(
+    (p) => p.serialNumber === violator.serialNumber
+  );
+  if (oldViolator === undefined) {
+    console.log(
+      'busted! new violator:',
+      violator.serialNumber,
+      violator.closestViolation
+    );
+    violators.push(violator);
+  } else {
+    // if the violator already exists, update his violation time
+    // and closest violation, if necessary
+    console.log(
+      'updating violator:',
+      violator.serialNumber,
+      violator.closestViolation
+    );
+    if (violator.closestViolation > oldViolator.closestViolation) {
+      violator.closestViolation = oldViolator.closestViolation;
     }
-  });
+    violators = violators.map((existingViolator) => {
+      if (existingViolator.serialNumber === violator.serialNumber) {
+        return violator;
+      }
+      return {
+        ...existingViolator,
+      };
+    });
+  }
 };
 
 // main loop, runs every 2 seconds
@@ -85,7 +121,7 @@ setInterval(() => {
         (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
       );
       if (distance < 100000) {
-        addViolator(drone.serialNumber, distance);
+        getPilot(drone.serialNumber, distance);
       }
     });
   });
