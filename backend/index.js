@@ -91,21 +91,6 @@ app.get('/drones', (req, res) => {
   });
 });
 
-app.get('/deviceInformation', (req, res) => {
-  axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
-    const data = JSON.parse(convertxml.xml2json(xml.data));
-    const deviceData = data.elements[0].elements[0];
-    const device = {
-      deviceId: deviceData.attributes.deviceId,
-      listenRange: deviceData.elements[0].elements[0].text,
-      deviceStarted: deviceData.elements[1].elements[0].text,
-      uptimeSeconds: deviceData.elements[2].elements[0].text,
-      updateIntervalMs: deviceData.elements[3].elements[0].text,
-    };
-    res.send(device);
-  });
-});
-
 app.get('/violators', (req, res) => {
   res.send(violatorslocal);
 });
