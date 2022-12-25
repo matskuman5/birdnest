@@ -34,12 +34,12 @@ const addViolator = (serialNumber, distance) => {
       if (violator.closestViolation > oldViolator.closestViolation) {
         violator.closestViolation = oldViolator.closestViolation;
       }
-      violators = violators.map((eviolator) => {
-        if (eviolator.serialNumber === violator.serialNumber) {
+      violators = violators.map((existingViolator) => {
+        if (existingViolator.serialNumber === violator.serialNumber) {
           return violator;
         }
         return {
-          ...eviolator,
+          ...existingViolator,
         };
       });
     }
