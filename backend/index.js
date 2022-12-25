@@ -12,6 +12,7 @@ var violators = [];
 var drones = [];
 var snapshotTimestamp = 0;
 
+// adds or updates a violator
 const addViolator = (serialNumber, distance) => {
   console.log('busted!', serialNumber, distance);
   axios
@@ -32,6 +33,8 @@ const addViolator = (serialNumber, distance) => {
       if (oldViolator === undefined) {
         violators.push(violator);
       } else {
+        // if the violator already exists, update his violation time
+        // and closest violation, if necessary
         console.log('updating violator');
         if (violator.closestViolation > oldViolator.closestViolation) {
           violator.closestViolation = oldViolator.closestViolation;
@@ -48,13 +51,16 @@ const addViolator = (serialNumber, distance) => {
     });
 };
 
+// main loop, runs every 2 seconds
 setInterval(() => {
+  // remove violators older than 10 minutes
   violators = violators.filter((violator) => {
     const currentTime = Date.now();
     const violationTime = new Date(violator.violationTime);
     return currentTime - violationTime < 1000 * 60 * 10;
   });
 
+  // get drone locations from API
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
@@ -69,6 +75,9 @@ setInterval(() => {
     snapshotTimestamp = droneData.attributes.snapshotTimestamp;
     drones = dronesAPI;
     console.log('droneslocal:', drones.length);
+
+    // check for violators
+    // violation = drone distance to nest at (250000, 250000) < 100 m
     drones.forEach((drone) => {
       const distance = Math.sqrt(
         (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
