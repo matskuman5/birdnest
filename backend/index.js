@@ -8,6 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.static('build'));
 
+const apiUrl = 'https://assignments.reaktor.com/birdnest';
+
 var violators = [];
 var drones = [];
 var snapshotTimestamp = 0;
@@ -15,37 +17,33 @@ var snapshotTimestamp = 0;
 // adds or updates a violator
 const addViolator = (serialNumber, distance) => {
   console.log('busted!', serialNumber, distance);
-  axios
-    .get(`https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`)
-    .then((pilot) => {
-      const violator = {
-        ...pilot.data,
-        serialNumber: serialNumber,
-        violationTime: Date.now(),
-        closestViolation: distance,
-      };
-      const oldViolator = violators.find(
-        (p) => p.serialNumber === serialNumber
-      );
-      if (oldViolator === undefined) {
-        violators.push(violator);
-      } else {
-        // if the violator already exists, update his violation time
-        // and closest violation, if necessary
-        console.log('updating violator');
-        if (violator.closestViolation > oldViolator.closestViolation) {
-          violator.closestViolation = oldViolator.closestViolation;
-        }
-        violators = violators.map((eviolator) => {
-          if (eviolator.serialNumber === violator.serialNumber) {
-            return violator;
-          }
-          return {
-            ...eviolator,
-          };
-        });
+  axios.get(`${apiUrl}/pilots/${serialNumber}`).then((pilot) => {
+    const violator = {
+      ...pilot.data,
+      serialNumber: serialNumber,
+      violationTime: Date.now(),
+      closestViolation: distance,
+    };
+    const oldViolator = violators.find((p) => p.serialNumber === serialNumber);
+    if (oldViolator === undefined) {
+      violators.push(violator);
+    } else {
+      // if the violator already exists, update his violation time
+      // and closest violation, if necessary
+      console.log('updating violator');
+      if (violator.closestViolation > oldViolator.closestViolation) {
+        violator.closestViolation = oldViolator.closestViolation;
       }
-    });
+      violators = violators.map((eviolator) => {
+        if (eviolator.serialNumber === violator.serialNumber) {
+          return violator;
+        }
+        return {
+          ...eviolator,
+        };
+      });
+    }
+  });
 };
 
 // main loop, runs every 2 seconds
@@ -58,7 +56,7 @@ setInterval(() => {
   });
 
   // get drone locations from API
-  axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
+  axios.get(`${apiUrl}/drones`).then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
     const dronesAPI = droneData.elements.map((d) => {
