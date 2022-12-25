@@ -8,8 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.static('build'));
 
-var violatorslocal = [];
-var droneslocal = [];
+var violators = [];
+var drones = [];
 var snapshotTimestamp = 0;
 
 const addViolator = (serialNumber, distance) => {
@@ -26,17 +26,17 @@ const addViolator = (serialNumber, distance) => {
         violationTime: Date.now(),
         closestViolation: distance,
       };
-      const oldViolator = violatorslocal.find(
+      const oldViolator = violators.find(
         (p) => p.serialNumber === serialNumber
       );
       if (oldViolator === undefined) {
-        violatorslocal.push(violator);
+        violators.push(violator);
       } else {
         console.log('updating violator');
         if (violator.closestViolation > oldViolator.closestViolation) {
           violator.closestViolation = oldViolator.closestViolation;
         }
-        violatorslocal = violatorslocal.map((eviolator) => {
+        violators = violators.map((eviolator) => {
           if (eviolator.serialNumber === violator.serialNumber) {
             return violator;
           }
@@ -49,7 +49,7 @@ const addViolator = (serialNumber, distance) => {
 };
 
 setInterval(() => {
-  violatorslocal = violatorslocal.filter((violator) => {
+  violators = violators.filter((violator) => {
     const currentTime = Date.now();
     const violationTime = new Date(violator.violationTime);
     return currentTime - violationTime < 1000 * 60 * 10;
@@ -58,7 +58,7 @@ setInterval(() => {
   axios.get('https://assignments.reaktor.com/birdnest/drones').then((xml) => {
     const data = JSON.parse(convertxml.xml2json(xml.data));
     const droneData = data.elements[0].elements[1];
-    const drones = droneData.elements.map((d) => {
+    const dronesAPI = droneData.elements.map((d) => {
       const drone = {
         serialNumber: d.elements[0].elements[0].text,
         positionY: parseFloat(d.elements[7].elements[0].text),
@@ -67,9 +67,9 @@ setInterval(() => {
       return drone;
     });
     snapshotTimestamp = droneData.attributes.snapshotTimestamp;
-    droneslocal = drones;
-    console.log('droneslocal:', droneslocal.length);
-    droneslocal.forEach((drone) => {
+    drones = dronesAPI;
+    console.log('droneslocal:', drones.length);
+    drones.forEach((drone) => {
       const distance = Math.sqrt(
         (drone.positionX - 250000) ** 2 + (drone.positionY - 250000) ** 2
       );
@@ -82,13 +82,13 @@ setInterval(() => {
 
 app.get('/drones', (req, res) => {
   res.send({
-    drones: droneslocal,
+    drones: drones,
     snapshotTimestamp: snapshotTimestamp,
   });
 });
 
 app.get('/violators', (req, res) => {
-  res.send(violatorslocal);
+  res.send(violators);
 });
 
 const PORT = process.env.PORT || 3001;
