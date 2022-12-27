@@ -10,9 +10,9 @@ app.use(express.static('build'));
 
 const apiUrl = 'https://assignments.reaktor.com/birdnest';
 
-var violators = [];
-var drones = [];
-var snapshotTimestamp = 0;
+let violators = [];
+let drones = [];
+let snapshotTimestamp = 0;
 
 // gets pilot data from API, then adds violation
 const getPilot = (serialNumber, distance) => {
