@@ -33,6 +33,7 @@ const App = () => {
     <Container>
       <div className="App">
         <p>Hello, welcome to the birdnest app!</p>
+        <p>Author: Matias Selin (https://github.com/matskuman5)</p>
         <p>Data last retrieved: {snapshotTimestamp}</p>
         <DroneTable drones={drones}></DroneTable>
         <ViolatorTable violators={violators}></ViolatorTable>
