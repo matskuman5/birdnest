@@ -2,13 +2,12 @@
   "engines": {
     "node": "16.13.1"
   },
-  "name": "birdnest",
+  "name": "birdnest-backend",
   "version": "1.0.0",
   "description": "Reaktor Developer Trainee pre-assignment 2023",
   "main": "index.js",
   "scripts": {
     "build:ui": "rm -rf build && cd ../frontend && npm run build && cp -r build ../backend",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon index.js"
   },
   "author": "Matias Selin",
