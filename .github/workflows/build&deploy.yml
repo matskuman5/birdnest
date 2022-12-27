@@ -18,5 +18,12 @@ jobs:
         with:
           node-version: '16'
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: cd frontend && npm install && cd ..
-      - run: cd backend && npm run build:ui && pwd && ls && flyctl deploy --remote-only
+      - name: Install frontend dependencies
+        run: |
+          npm install
+        working-directory: ./frontend
+      - name: Build frontend, copy it to backend and deploy to fly.io
+        run: |
+          npm run build:ui
+          flyctl deploy --remote-only
+        working-directory: ./backend
