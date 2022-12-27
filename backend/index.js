@@ -95,9 +95,9 @@ setInterval(() => {
 
   // get drone locations from API
   axios.get(`${apiUrl}/drones`).then((xml) => {
-    const data = JSON.parse(convertxml.xml2json(xml.data));
-    const droneData = data.elements[0].elements[1];
-    const dronesAPI = droneData.elements.map((d) => {
+    const rawData = JSON.parse(convertxml.xml2json(xml.data));
+    const droneData = rawData.elements[0].elements[1];
+    drones = droneData.elements.map((d) => {
       const drone = {
         serialNumber: d.elements[0].elements[0].text,
         positionY: parseFloat(d.elements[7].elements[0].text),
@@ -106,7 +106,6 @@ setInterval(() => {
       return drone;
     });
     snapshotTimestamp = droneData.attributes.snapshotTimestamp;
-    drones = dronesAPI;
     console.log(
       'drones detected:',
       drones.length,
